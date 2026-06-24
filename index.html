@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>미사용 연차유급휴가일수 통지서 (2026 1차)</title>
+<style>
+  :root{--line:#222;--hol:#fde2e2;--sat:#e2ecfb;--poly:#fff2b8;--full:#cdebd4;--half:#ffe1bd;--ok:#1c7d3d;--bad:#c0392b;}
+  *{box-sizing:border-box}
+  body{font-family:"Malgun Gothic","맑은 고딕",AppleSDGothicNeo,sans-serif;margin:0;background:#eceef1;color:#111;font-size:13px;line-height:1.5}
+  .wrap{max-width:920px;margin:0 auto;padding:18px}
+  .panel{background:#fff;border:1px solid #d4d8dd;border-radius:10px;padding:18px 20px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  .panel h2{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  input[type=text],input[type=password],input[type=email]{padding:9px 11px;border:1px solid #c2c7cd;border-radius:7px;font-size:14px}
+  button{cursor:pointer;border:none;border-radius:7px;padding:9px 16px;font-size:13px;font-weight:600;background:#2d6cdf;color:#fff}
+  button.ghost{background:#eef1f5;color:#333}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  .muted{color:#7a818a;font-size:12px}.small{font-size:11.5px}
+  .err{color:var(--bad);font-size:12.5px;margin-top:6px;min-height:16px}
+  .okmsg{color:var(--ok);font-size:12.5px;margin-top:6px}
+  details{margin-top:6px}summary{cursor:pointer;color:#566;font-size:12.5px;user-select:none}
+  .demo{background:#fff7e0;border:1px solid #f0d98a;color:#8a6d1a;border-radius:8px;padding:8px 12px;margin-bottom:12px;font-size:12px}
+  .verify{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:11px 16px;border-radius:9px;font-weight:700;font-size:14px}
+  .verify.ok{background:#e7f6ec;color:var(--ok);border:1px solid #b6e0c2}
+  .verify.bad{background:#fdecea;color:var(--bad);border:1px solid #f3c2bd}
+  .chip{font-weight:700;background:#fff;border-radius:6px;padding:3px 9px;border:1px solid currentColor;font-size:13px}
+  #sheet{display:none}
+  .doc{background:#fff;padding:26px 30px 30px;border:1px solid #cfd3d8;border-radius:6px}
+  .title{text-align:center;font-size:23px;font-weight:800;text-decoration:underline;text-underline-offset:5px;margin:2px 0 16px}
+  table.b{border-collapse:collapse;width:100%}
+  table.b td,table.b th{border:1px solid var(--line);padding:4px 6px;text-align:center;vertical-align:middle}
+  .hd th{background:#f1f3f5;width:11%;font-weight:700;white-space:nowrap}.hd td{width:22.3%}.basis{font-weight:700}
+  .notice{margin:14px 0;font-size:12.7px;line-height:1.65}.notice b{color:#c0392b}
+  .law{margin:10px 0;font-size:11.6px;line-height:1.6}.law .h{font-weight:700;margin-bottom:3px}
+  .sec-title{text-align:center;font-weight:800;font-size:15px;margin:16px 0 4px}.guide{font-size:11.7px;margin:0 0 7px}
+  table.legend{border-collapse:collapse;width:100%;margin-bottom:10px;font-size:11.5px}
+  table.legend td{border:1px solid var(--line);padding:3px 5px;text-align:center}
+  .lg-num{font-weight:800;width:26px}.lg-sat{background:var(--sat)}.lg-hol{background:var(--hol)}.lg-poly{background:var(--poly)}
+  table.cal{border-collapse:collapse;width:100%;table-layout:fixed}
+  table.cal td{border:1px solid var(--line);height:23px;text-align:center;font-size:11.5px;padding:0}
+  td.mlabel{width:9%;font-weight:700;font-size:11.5px;background:#f7f8fa;line-height:1.25}
+  td.mlabel .mc{font-weight:600;color:#2d6cdf;font-size:10.5px}
+  td.day{cursor:pointer;position:relative;width:5.6%;user-select:none}
+  td.day:hover{background:#eef4ff}
+  td.sat{background:var(--sat);color:#3a4a63;cursor:default}
+  td.sun,td.hol{background:var(--hol);color:#b03b3b;cursor:default}
+  td.poly{background:var(--poly);cursor:pointer}td.poly .dn{border:1.6px solid #c79a18;border-radius:50%;font-weight:700;color:#8a6d1a}
+  td.blank{background:#fafbfc;cursor:default}
+  td.day .dn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;line-height:1}
+  td.full{background:var(--full)}td.full .dn{border:1.6px solid #1c7d3d;border-radius:50%;font-weight:700;color:#14591f}
+  td.half{background:var(--half)}td.half .dn{border:1.6px solid #d9822b;border-radius:50%;font-weight:700;color:#9c5510}
+  td.half::after{content:"반";position:absolute;top:0;right:1px;font-size:8px;color:#9c5510;font-weight:700}
+  .total{text-align:center;font-weight:800;font-size:14px;border:1px solid var(--line);border-top:none;padding:6px}
+  .submit{margin:16px 0 2px;font-size:12.5px}
+  .sign{text-align:center;margin-top:14px}
+  .sign .date{font-size:17px;font-weight:800;letter-spacing:1px;margin-bottom:8px}
+  .sign .me{font-size:15px}.sign .me .nm{display:inline-block;min-width:120px;border-bottom:1px solid #333;margin:0 6px;font-weight:700}
+  @media print{
+    body{background:#fff;font-size:11px}.wrap{max-width:none;padding:0}
+    .no-print{display:none !important}#sheet{display:block !important}
+    .doc{border:none;border-radius:0;padding:0}@page{size:A4 portrait;margin:12mm}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}.title{font-size:21px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="panel no-print" id="loginPanel">
+    <h2>🗓️ 미사용 연차 사용계획서 작성 <span class="muted">· 2026년 1차 촉진</span></h2>
+    <div class="demo" id="demoBanner" style="display:none">⚠️ 데모 모드입니다. Firebase 설정 전이라 샘플(홍길동 / 900521)만 조회됩니다.</div>
+    <div class="muted" style="margin-bottom:10px">성명과 생년월일을 입력하면 <b>본인</b> 통지서가 표시됩니다. 달력에 사용일을 표시한 뒤 인쇄해 서명·제출하세요.</div>
+    <div class="row">
+      <input type="text" id="inName" placeholder="성명 (예: 홍길동)" style="width:170px">
+      <input type="text" id="inBirth" placeholder="생년월일 (예: 900521 또는 1990-05-21)" style="width:240px">
+      <button id="btnLogin">조회</button>
+      <button class="ghost" id="btnLogout" style="display:none">다른 사람 조회</button>
+    </div>
+    <div class="err" id="loginErr"></div>
+
+    <details id="adminBox">
+      <summary>🔒 인사팀(관리자) · 엑셀 명단 업로드</summary>
+
+      <div id="adminLogin" style="margin-top:10px">
+        <div class="small muted" style="margin-bottom:8px">관리자만 명단을 업로드할 수 있습니다. 등록된 관리자 계정으로 로그인하세요.</div>
+        <div class="row">
+          <input type="email" id="adEmail" placeholder="관리자 이메일" style="width:220px">
+          <input type="password" id="adPw" placeholder="비밀번호" style="width:170px">
+          <button id="btnAdLogin">로그인</button>
+        </div>
+        <div class="err" id="adErr"></div>
+      </div>
+
+      <div id="adminPanel" style="display:none;margin-top:10px">
+        <div class="row" style="margin-bottom:8px">
+          <span class="okmsg" id="adWho"></span>
+          <span style="flex:1"></span>
+          <button class="ghost" id="btnAdLogout">관리자 로그아웃</button>
+        </div>
+        <div class="small muted" style="margin-bottom:8px">
+          업로드 양식(성명/생년월일/소속/직책/발생연차/사용연차/폴리방학)에 맞춘 .xlsx 파일을 올리세요. 같은 사람은 덮어쓰기됩니다.
+        </div>
+        <div class="row">
+          <input type="file" id="fileXlsx" accept=".xlsx,.xls" class="ghost" style="padding:6px">
+          <button id="btnUpload">업로드</button>
+          <button class="ghost" id="btnCount">현재 등록 인원</button>
+          <span class="small" id="adStatus"></span>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <div class="panel no-print" id="ctrl" style="display:none">
+    <div class="verify bad" id="verify">
+      <span id="vMsg">사용일을 선택하세요</span>
+      <span class="chip">미사용 <b id="vNeed">0</b>일</span>
+      <span class="chip">선택 <b id="vSel">0</b>일</span>
+      <span style="flex:1"></span>
+      <button class="ghost" id="btnClear">전체 해제</button>
+      <button id="btnPrint" disabled>🖨️ 인쇄 (서명용)</button>
+    </div>
+    <div class="muted small" style="margin-top:8px">평일 칸 클릭 → <b>○ 연차(1일)</b> → <b>◐ 반차(0.5일)</b> → 해제. 토·일·공휴일은 선택할 수 없습니다. <b style="color:#8a6d1a">노란 칸(폴리 방학)</b>은 미리 반영돼 있으며, 클릭하면 수정할 수 있습니다.</div>
+  </div>
+
+  <div id="sheet">
+    <div class="doc" id="doc">
+      <div class="title">미사용 연차유급휴가일수 통지서</div>
+      <table class="b">
+        <tr class="hd"><th>소속</th><td id="f_dept"></td><th>직책</th><td id="f_title"></td><th>성명</th><td id="f_name"></td></tr>
+        <tr class="hd"><th>발생연차</th><td id="f_granted"></td><th>사용연차</th><td id="f_used"></td><th>미사용연차</th><td id="f_unused" class="basis"></td></tr>
+        <tr><td colspan="6" style="font-weight:700">( ’26년 7월 1일 기준 )</td></tr>
+      </table>
+      <div class="notice">
+        <b>2026. 07. 10.</b> 까지 미사용 연차유급휴가일수의 사용 시기를 작성, 서명하여 인사팀으로 서면 통보하여 주실 것을 촉구드립니다. 동 기한 내에 “미사용 연차유급휴가 사용시기 지정 통보”가 제출되지 아니한 경우, <b>2026. 10. 31.</b> 회사가 임의 지정할 예정이며, 그럼에도 불구하고 사용하지 아니한 연차유급휴가일수에 대하여는 향후 연차유급휴가수당이 지급되지 않음을 알려드리니 유념하시기 바랍니다.
+      </div>
+      <div class="law">
+        <div class="h">[ 관련법령 : 근로기준법 제61조 (연차유급휴가의 사용 촉진) ]</div>
+        사용자가 제60조제1항 및 제4항에 따른 유급휴가의 사용을 촉진하기 위하여 다음 각 호의 조치를 하였음에도 불구하고 근로자가 휴가를 사용하지 아니하여 제60조제7항 본문에 따라 소멸된 경우에는 사용자는 그 사용하지 아니한 휴가에 대하여 보상할 의무가 없고, 제60조제7항 단서에 따른 사용자의 귀책사유에 해당하지 아니하는 것으로 본다.
+        <div style="margin-top:5px">1. 제60조제7항 본문에 따른 기간이 끝나기 6개월 전을 기준으로 10일 이내에 사용자가 근로자별로 사용하지 아니한 휴가 일수를 알려주고, 근로자가 그 사용 시기를 정하여 사용자에게 통보하도록 서면으로 촉구할 것</div>
+        <div>2. 제1호에 따른 촉구에도 불구하고 근로자가 촉구를 받은 때부터 10일 이내에 사용하지 아니한 휴가의 전부 또는 일부의 사용시기를 정하여 사용자에게 통보하지 아니하면 제60조제7항 본문에 따른 기간이 끝나기 2개월 전까지 사용자가 사용하지 아니한 휴가의 사용 시기를 정하여 근로자에게 서면으로 통보할 것</div>
+      </div>
+      <div class="sec-title">미사용 연차유급휴가일수 사용 시기</div>
+      <div class="guide">* 연차유급휴가 사용계획 일정표 (해당 날짜에 ○표시하고, 반차는 ◐로 자동 구분됩니다)</div>
+      <table class="legend">
+        <tr><td class="lg-num lg-hol">1</td><td>토요일</td><td class="lg-num lg-hol">2</td><td>일요일</td><td class="lg-num lg-hol">3</td><td>공휴일</td><td class="lg-num lg-poly">4</td><td>POLY Vacation</td></tr>
+        <tr><td colspan="2" class="lg-sat">무급휴무일 (연차 차감없음)</td><td colspan="4" class="lg-hol">유급휴일 (연차 차감없음)</td><td colspan="2" class="lg-poly">연차 사용</td></tr>
+      </table>
+      <table class="cal" id="cal"></table>
+      <div class="total">총 사용일수 ( <span id="grandTotal">0</span> 일 )</div>
+      <div class="submit">위 본인은 근로기준법 제61조 연차유급휴가의 사용 촉진에 의거하여 연차 사용계획서를 제출합니다.</div>
+      <div class="sign">
+        <div class="date" id="submitDate"></div>
+        <div class="me">상기 본인 <span class="nm" id="signName"></span> (서명)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, getDocs, collection, writeBatch }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import * as XLSX from "https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs";
+
+/* ===========================================================
+   ① Firebase 설정 — 본인 프로젝트 값으로 교체하세요.
+      (lifeos 프로젝트를 재사용해도 되고, 새 프로젝트도 됩니다)
+   =========================================================== */
+const firebaseConfig = {
+  apiKey:            "AIzaSyBuxdUkn2_t8_RZKp_JVGiCLgK6Iqd0-Lc",
+  authDomain:        "hr-vacation-af7ad.firebaseapp.com",
+  projectId:         "hr-vacation-af7ad",
+  storageBucket:     "hr-vacation-af7ad.firebasestorage.app",
+  messagingSenderId: "957157342095",
+  appId:             "1:957157342095:web:717e601bc171e4afc329fa"
+};
+const COLLECTION  = "yeoncha_promo_2026";   // Firestore 컬렉션 이름 (보안규칙과 일치)
+const ADMIN_EMAIL = "justin.lee@esc.edu-poly.com";   // 이 계정만 업로드 가능 (보안규칙과 일치)
+
+/* ② 2026년 하반기 공휴일 (유급휴일 = 연차 차감 없음) */
+const HOLIDAYS = {
+  "2026-07-17":"제헌절","2026-08-15":"광복절","2026-08-17":"광복절 대체공휴일",
+  "2026-09-24":"추석연휴","2026-09-25":"추석","2026-09-26":"추석연휴",
+  "2026-10-03":"개천절","2026-10-05":"개천절 대체공휴일","2026-10-09":"한글날","2026-12-25":"성탄절"
+};
+/* ③ 폴리 방학은 업로드 엑셀의 '폴리방학' 열에서 사람별로 들어옵니다. */
+
+/* ===== 공통 ===== */
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2,"0");
+const digits = s => (s||"").toString().replace(/\D/g,"");
+const dstr = (m,d) => `2026-${pad(m)}-${pad(d)}`;
+const daysIn = m => new Date(2026, m, 0).getDate();
+const unusedOf = e => Math.round(((+e.granted||0)-(+e.used||0))*10)/10;
+const MONTHS=[7,8,9,10,11,12];
+const sel={}; let current=null;
+let polyDates=new Set(), polyUnlocked=new Set();
+
+/* 평일(연차 차감 대상)인지 — 2026 하반기, 토일공휴일 제외 */
+function isWorkday(k){
+  if(!/^2026-(0[7-9]|1[0-2])-\d{2}$/.test(k)) return false;
+  if(HOLIDAYS[k]) return false;
+  const dow=new Date(k+"T00:00:00").getDay();
+  return dow!==0 && dow!==6;
+}
+/* 엑셀 '폴리방학' 셀 → 날짜배열. "8/13, 8/14" / "2026-08-13" 등 허용 */
+function parsePoly(v){
+  if(v==null) return [];
+  const out=[];
+  String(v).split(/[,\n;]+/).forEach(t=>{
+    t=t.trim(); if(!t) return; let m;
+    if(m=t.match(/^(\d{4})[-.\/](\d{1,2})[-.\/](\d{1,2})$/)) out.push(`${m[1]}-${pad(m[2])}-${pad(m[3])}`);
+    else if(m=t.match(/^(\d{1,2})[-.\/](\d{1,2})$/)) out.push(`2026-${pad(m[1])}-${pad(m[2])}`);
+    else if(m=t.match(/^(\d{1,2})월\s*(\d{1,2})일?$/)) out.push(`2026-${pad(m[1])}-${pad(m[2])}`);
+  });
+  return out;
+}
+
+/* Firebase 초기화 (설정 미입력 시 데모 모드) */
+const DEMO = firebaseConfig.apiKey.includes("여기");
+let db=null, auth=null;
+if(!DEMO){
+  const app = initializeApp(firebaseConfig);
+  db = getFirestore(app); auth = getAuth(app);
+  onAuthStateChanged(auth, u=>{
+    const isAdmin = u && u.email===ADMIN_EMAIL;
+    $("adminLogin").style.display = isAdmin ? "none":"block";
+    $("adminPanel").style.display = isAdmin ? "block":"none";
+    if(isAdmin) $("adWho").textContent = "✓ 관리자 로그인됨 ("+u.email+")";
+  });
+} else {
+  $("demoBanner").style.display="block";
+}
+const DEMO_ROSTER=[{name:"홍길동",birth:"900521",dept:"강남캠퍼스",title:"강사",granted:15,used:8,poly:["2026-08-13","2026-08-14"]}];
+
+/* 문서 ID = 이름+생년월일(뒤 6자리) 해시 → 본인만 자기 1건 조회 가능 */
+async function docIdFor(name, birth){
+  const key = name.trim().replace(/\s+/g,"") + "|" + digits(birth).slice(-6);
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(key));
+  return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+async function lookup(name, birth){
+  if(DEMO){
+    const b=digits(birth);
+    return DEMO_ROSTER.find(e=>e.name.trim()===name.trim() &&
+      (digits(e.birth)===b||digits(e.birth).endsWith(b)||b.endsWith(digits(e.birth)))) || null;
+  }
+  const id = await docIdFor(name,birth);
+  const snap = await getDoc(doc(db, COLLECTION, id));
+  return snap.exists()? snap.data() : null;
+}
+
+/* ===== 직원 조회 ===== */
+$("btnLogin").addEventListener("click", async ()=>{
+  const name=$("inName").value, birth=$("inBirth").value;
+  $("loginErr").textContent="";
+  if(!name.trim()||!birth.trim()){ $("loginErr").textContent="성명과 생년월일을 모두 입력하세요."; return; }
+  $("btnLogin").disabled=true;
+  try{
+    const e=await lookup(name,birth);
+    if(!e){ $("loginErr").textContent="해당하는 대상자를 찾을 수 없습니다. 성명·생년월일을 확인하거나 인사팀에 문의하세요."; return; }
+    loadEmployee(e);
+  }catch(err){ $("loginErr").textContent="조회 중 오류: "+(err.message||err); }
+  finally{ $("btnLogin").disabled=false; }
+});
+$("inBirth").addEventListener("keydown",ev=>{ if(ev.key==="Enter") $("btnLogin").click(); });
+
+function loadEmployee(e){
+  current=e;
+  for(const k in sel) delete sel[k];
+  polyUnlocked=new Set();
+  polyDates=new Set((e.poly||[]).filter(isWorkday));
+  $("f_dept").textContent=e.dept||""; $("f_title").textContent=e.title||""; $("f_name").textContent=e.name||"";
+  $("f_granted").textContent=(+e.granted)+"일"; $("f_used").textContent=(+e.used)+"일"; $("f_unused").textContent=unusedOf(e)+"일";
+  $("signName").textContent=e.name||"";
+  const t=new Date(); $("submitDate").textContent=`${t.getFullYear()}-${pad(t.getMonth()+1)}-${pad(t.getDate())}`;
+  polyDates.forEach(k=> sel[k]="poly");
+  buildCalendar(); updateCounts();
+  $("loginPanel").style.display="none"; $("btnLogout").style.display="";
+  $("ctrl").style.display=""; $("sheet").style.display="block"; window.scrollTo(0,0);
+}
+$("btnLogout").addEventListener("click",()=>{
+  current=null; $("loginPanel").style.display=""; $("ctrl").style.display="none"; $("sheet").style.display="none";
+  $("inName").value=""; $("inBirth").value=""; $("loginErr").textContent="";
+});
+
+/* ===== 달력 ===== */
+function dayType(m,d){
+  const k=dstr(m,d);
+  if(polyDates.has(k) && !polyUnlocked.has(k)) return {t:"poly"};
+  if(HOLIDAYS[k]) return {t:"hol",label:HOLIDAYS[k]};
+  const dow=new Date(2026,m-1,d).getDay();
+  if(dow===0) return {t:"sun"}; if(dow===6) return {t:"sat"}; return {t:"work"};
+}
+function buildCalendar(){
+  let html="";
+  MONTHS.forEach(m=>{
+    const n=daysIn(m);
+    const cell=d=>{
+      if(d>n) return `<td class="blank"></td>`;
+      const ty=dayType(m,d),k=dstr(m,d);
+      if(ty.t==="sat") return `<td class="sat" title="토요일">${d}</td>`;
+      if(ty.t==="sun") return `<td class="sun" title="일요일">${d}</td>`;
+      if(ty.t==="hol") return `<td class="hol" title="${ty.label}">${d}</td>`;
+      if(ty.t==="poly") return `<td class="poly day" data-k="${k}" title="폴리 방학 (클릭하면 수정)"><span class="dn">${d}</span></td>`;
+      return `<td class="day" data-k="${k}"><span class="dn">${d}</span></td>`;
+    };
+    let r1=""; for(let d=1;d<=16;d++) r1+=cell(d);
+    let r2=""; for(let d=17;d<=32;d++) r2+=cell(d);
+    html+=`<tr><td class="mlabel" rowspan="2">${m}월<br><span class="mc" id="mc${m}">(0일)</span></td>${r1}</tr><tr>${r2}</tr>`;
+  });
+  $("cal").innerHTML=html;
+  $("cal").querySelectorAll("td.day").forEach(td=>{
+    const k=td.dataset.k;
+    if(td.classList.contains("poly")){
+      td.onclick=()=>{
+        if(confirm("이 날은 폴리 방학으로 지정된 날입니다.\n수정하시겠습니까?")){
+          polyUnlocked.add(k); sel[k]="full";   // 일반 연차로 전환(일수 유지) → 다시 클릭해 반차/해제 가능
+          buildCalendar(); updateCounts();
+        }
+      };
+    } else {
+      td.onclick=()=>toggle(k);
+    }
+  });
+}
+function toggle(k){
+  if(sel[k]==="poly") return;
+  if(!sel[k]) sel[k]="full"; else if(sel[k]==="full") sel[k]="half"; else delete sel[k];
+  render(); updateCounts();
+}
+function render(){
+  $("cal").querySelectorAll("td.day").forEach(td=>{
+    if(td.classList.contains("poly")) return;
+    const k=td.dataset.k; td.classList.remove("full","half");
+    if(sel[k]==="full") td.classList.add("full");
+    else if(sel[k]==="half") td.classList.add("half");
+  });
+}
+const valOf=k=>{const v=sel[k];return v==="half"?0.5:v?1:0;};
+function updateCounts(){
+  let grand=0;
+  MONTHS.forEach(m=>{ let s=0;const n=daysIn(m); for(let d=1;d<=n;d++) s+=valOf(dstr(m,d)); $("mc"+m).textContent=`(${s}일)`; grand+=s; });
+  grand=Math.round(grand*10)/10; $("grandTotal").textContent=grand;
+  const need=current?unusedOf(current):0;
+  $("vNeed").textContent=need; $("vSel").textContent=grand;
+  const v=$("verify"),ok=(grand===need),diff=Math.round((need-grand)*10)/10;
+  v.className="verify "+(ok?"ok":"bad");
+  $("vMsg").textContent=ok?"✓ 미사용 연차와 일치합니다. 인쇄 후 서명하세요.":diff>0?`${diff}일 더 선택해야 합니다`:`${-diff}일 초과 선택되었습니다`;
+  $("btnPrint").disabled=!ok; render();
+}
+$("btnClear").addEventListener("click",()=>{ for(const k in sel){ if(sel[k]!=="poly") delete sel[k]; } render(); updateCounts(); });
+$("btnPrint").addEventListener("click",()=>window.print());
+
+/* ===== 관리자: 로그인 / 엑셀 업로드 ===== */
+$("btnAdLogin").addEventListener("click", async ()=>{
+  $("adErr").textContent="";
+  if(DEMO){ $("adErr").textContent="Firebase 설정 후 사용 가능합니다."; return; }
+  try{ await signInWithEmailAndPassword(auth, $("adEmail").value.trim(), $("adPw").value); }
+  catch(err){ $("adErr").textContent="로그인 실패: "+(err.code||err.message); }
+});
+$("btnAdLogout").addEventListener("click", ()=> signOut(auth));
+
+$("btnUpload").addEventListener("click", async ()=>{
+  const f=$("fileXlsx").files[0];
+  if(!f){ $("adStatus").textContent="파일을 선택하세요."; return; }
+  $("btnUpload").disabled=true; $("adStatus").textContent="처리 중…";
+  try{
+    const wb=XLSX.read(await f.arrayBuffer());
+    const ws=wb.Sheets[wb.SheetNames[0]];
+    const rows=XLSX.utils.sheet_to_json(ws,{defval:"",raw:false});
+    const recs=rows.map(r=>({
+      name:String(r["성명"]??r["이름"]??"").trim(),
+      birth:digits(r["생년월일"]),
+      dept:String(r["소속"]??"").trim(),
+      title:String(r["직책"]??"").trim(),
+      granted:Number(r["발생연차"]??0),
+      used:Number(r["사용연차"]??0),
+      poly:parsePoly(r["폴리방학"]??r["폴리 방학"]??r["POLY방학"]??"")
+    })).filter(r=>r.name && r.birth);
+    if(!recs.length){ $("adStatus").textContent="유효한 행이 없습니다. 양식을 확인하세요."; return; }
+    const batch=writeBatch(db);
+    for(const r of recs){ batch.set(doc(db, COLLECTION, await docIdFor(r.name,r.birth)), r); }
+    await batch.commit();
+    $("adStatus").textContent=`✓ ${recs.length}명 등록 완료`;
+  }catch(err){ $("adStatus").textContent="업로드 오류: "+(err.code||err.message); }
+  finally{ $("btnUpload").disabled=false; }
+});
+$("btnCount").addEventListener("click", async ()=>{
+  try{ const s=await getDocs(collection(db, COLLECTION)); $("adStatus").textContent=`현재 ${s.size}명 등록됨`; }
+  catch(err){ $("adStatus").textContent="조회 오류(보안규칙의 list 권한 확인): "+(err.code||err.message); }
+});
+</script>
+</body>
+</html>
