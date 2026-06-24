@@ -24,6 +24,7 @@
   .verify{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:11px 16px;border-radius:9px;font-weight:700;font-size:14px}
   .verify.ok{background:#e7f6ec;color:var(--ok);border:1px solid #b6e0c2}
   .verify.bad{background:#fdecea;color:var(--bad);border:1px solid #f3c2bd}
+  .verify.warn{background:#fff4e0;color:#9a6a14;border:1px solid #f0d18a}
   .chip{font-weight:700;background:#fff;border-radius:6px;padding:3px 9px;border:1px solid currentColor;font-size:13px}
   #sheet{display:none}
   .doc{background:#fff;padding:26px 30px 30px;border:1px solid #cfd3d8;border-radius:6px}
@@ -156,6 +157,7 @@
     </div>
   </div>
 </div>
+<div class="no-print" style="position:fixed;right:8px;bottom:6px;font-size:11px;color:#9aa3ad;z-index:5">ver 3 · 방학수정/초과허용 (06-24)</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -347,10 +349,15 @@ function updateCounts(){
   grand=Math.round(grand*10)/10; $("grandTotal").textContent=grand;
   const need=current?unusedOf(current):0;
   $("vNeed").textContent=need; $("vSel").textContent=grand;
-  const v=$("verify"),ok=(grand===need),diff=Math.round((need-grand)*10)/10;
-  v.className="verify "+(ok?"ok":"bad");
-  $("vMsg").textContent=ok?"✓ 미사용 연차와 일치합니다. 인쇄 후 서명하세요.":diff>0?`${diff}일 더 선택해야 합니다`:`${-diff}일 초과 선택되었습니다`;
-  $("btnPrint").disabled=!ok; render();
+  const diff=Math.round((need-grand)*10)/10;
+  let cls,msg;
+  if(diff>0){ cls="bad"; msg=`${diff}일 더 선택해야 합니다`; }
+  else if(diff===0){ cls="ok"; msg="✓ 미사용 연차와 일치합니다. 인쇄 후 서명하세요."; }
+  else { cls="warn"; msg=`⚠ 미사용 연차를 ${-diff}일 초과합니다 (그대로 인쇄 가능)`; }
+  $("verify").className="verify "+cls;
+  $("vMsg").textContent=msg;
+  $("btnPrint").disabled=(diff>0);
+  render();
 }
 $("btnClear").addEventListener("click",()=>{ for(const k in sel){ if(sel[k]!=="poly") delete sel[k]; } render(); updateCounts(); });
 $("btnPrint").addEventListener("click",()=>window.print());
