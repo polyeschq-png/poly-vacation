@@ -318,7 +318,7 @@ function buildCalendar(){
     if(td.classList.contains("poly")){
       td.onclick=()=>{
         if(confirm("이 날은 폴리 방학으로 지정된 날입니다.\n수정하시겠습니까?")){
-          polyUnlocked.add(k); sel[k]="full";   // 일반 연차로 전환(일수 유지) → 다시 클릭해 반차/해제 가능
+          polyUnlocked.add(k); delete sel[k];   // 방학 해제 → 빈 일반 날짜(연차 아님). 원하면 다시 클릭해 연차/반차 지정
           buildCalendar(); updateCounts();
         }
       };
