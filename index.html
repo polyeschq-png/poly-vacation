@@ -35,6 +35,17 @@
   .notice{margin:14px 0;font-size:12.7px;line-height:1.65}.notice b{color:#c0392b}
   .law{margin:10px 0;font-size:11.6px;line-height:1.6}.law .h{font-weight:700;margin-bottom:3px}
   .sec-title{text-align:center;font-weight:800;font-size:15px;margin:16px 0 4px}.guide{font-size:11.7px;margin:0 0 7px}
+  .guide.hi{background:#fff6d6;border:1px solid #ecd680;border-radius:6px;padding:7px 10px;font-size:12.4px;font-weight:700;color:#7a5c00}
+  .howto{background:#eef4ff;border:1px solid #b9d0f5;border-left:4px solid #2d6cdf;border-radius:8px;padding:11px 14px;margin-top:10px;font-size:12.8px;line-height:1.75}
+  .howto b.tt{display:block;font-size:13.5px;color:#1b4fa0;margin-bottom:5px}
+  .howto .step{display:block;margin:3px 0}
+  button.locked{opacity:.5;background:#9aa3ad;cursor:not-allowed}
+  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+  .modal-bg.on{display:flex}
+  .modal{background:#fff;border-radius:12px;max-width:450px;width:100%;padding:22px 24px;box-shadow:0 8px 30px rgba(0,0,0,.25)}
+  .modal h3{margin:0 0 14px;font-size:17px;color:#1b4fa0}
+  .modal .step{display:block;margin:8px 0;font-size:13.3px;line-height:1.7}
+  .modal .ok{margin-top:18px;width:100%;padding:11px;font-size:14px}
   table.legend{border-collapse:collapse;width:100%;margin-bottom:10px;font-size:11.5px}
   table.legend td{border:1px solid var(--line);padding:3px 5px;text-align:center}
   .lg-num{font-weight:800;width:26px}.lg-sat{background:var(--sat)}.lg-hol{background:var(--hol)}.lg-poly{background:var(--poly)}
@@ -119,9 +130,14 @@
       <span class="chip">선택 <b id="vSel">0</b>일</span>
       <span style="flex:1"></span>
       <button class="ghost" id="btnClear">전체 해제</button>
-      <button id="btnPrint" disabled>🖨️ 인쇄 (서명용)</button>
+      <button id="btnPrint" class="locked">🖨️ 인쇄 (서명용)</button>
     </div>
-    <div class="muted small" style="margin-top:8px">평일 칸 클릭 → <b>○ 연차(1일)</b> → <b>◐ 반차(0.5일)</b> → 해제. 토·일·공휴일은 선택할 수 없습니다. <b style="color:#8a6d1a">노란 칸(폴리 방학)</b>은 미리 반영돼 있으며, 클릭하면 수정할 수 있습니다.</div>
+    <div class="howto">
+      <b class="tt">📌 달력 작성 방법</b>
+      <span class="step">• 평일 칸을 <b>한 번 클릭 → ○ 연차(1일)</b>, <b>한 번 더 클릭 → ◐ 반차(0.5일)</b>, 다시 클릭하면 <b>해제</b>됩니다.</span>
+      <span class="step">• <b style="color:#8a6d1a">노란 칸(폴리 방학)</b>은 학사일정에 따라 <b>미리 지정</b>돼 있습니다. <b>클릭하면 해제</b>되어 일반 날짜로 바뀝니다.</span>
+      <span class="step">• 토·일·공휴일(색칸)은 연차 차감이 없어 <b>선택할 수 없습니다</b>.</span>
+    </div>
   </div>
 
   <div id="sheet">
@@ -142,9 +158,9 @@
         <div>2. 제1호에 따른 촉구에도 불구하고 근로자가 촉구를 받은 때부터 10일 이내에 사용하지 아니한 휴가의 전부 또는 일부의 사용시기를 정하여 사용자에게 통보하지 아니하면 제60조제7항 본문에 따른 기간이 끝나기 2개월 전까지 사용자가 사용하지 아니한 휴가의 사용 시기를 정하여 근로자에게 서면으로 통보할 것</div>
       </div>
       <div class="sec-title">미사용 연차유급휴가일수 사용 시기</div>
-      <div class="guide">* 연차유급휴가 사용계획 일정표 (해당 날짜에 ○표시하고, 반차는 ◐로 자동 구분됩니다)</div>
+      <div class="guide hi">* 연차유급휴가 사용계획 일정표 &nbsp;(해당 날짜를 클릭하면 <b>○ 연차</b>, 한 번 더 클릭하면 <b>◐ 반차</b>로 자동 구분됩니다)</div>
       <table class="legend">
-        <tr><td class="lg-num lg-hol">1</td><td>토요일</td><td class="lg-num lg-hol">2</td><td>일요일</td><td class="lg-num lg-hol">3</td><td>공휴일</td><td class="lg-num lg-poly">4</td><td>POLY Vacation</td></tr>
+        <tr><td class="lg-num lg-sat">1</td><td>토요일</td><td class="lg-num lg-hol">2</td><td>일요일</td><td class="lg-num lg-hol">3</td><td>공휴일</td><td class="lg-num lg-poly">4</td><td>POLY Vacation</td></tr>
         <tr><td colspan="2" class="lg-sat">무급휴무일 (연차 차감없음)</td><td colspan="4" class="lg-hol">유급휴일 (연차 차감없음)</td><td colspan="2" class="lg-poly">연차 사용</td></tr>
       </table>
       <table class="cal" id="cal"></table>
@@ -156,8 +172,18 @@
       </div>
     </div>
   </div>
+
+  <div class="modal-bg no-print" id="howtoModal">
+    <div class="modal">
+      <h3>📌 연차 사용계획서 작성 방법</h3>
+      <span class="step">① 아래 <b>달력에서 사용할 날짜</b>를 클릭하세요. <b>한 번 클릭 → ○ 연차(1일)</b>, <b>한 번 더 → ◐ 반차(0.5일)</b>, 다시 클릭하면 해제됩니다.</span>
+      <span class="step">② <b style="color:#8a6d1a">노란 칸(폴리 방학)</b>은 학사일정에 따라 미리 지정돼 있습니다. 클릭하면 해제되어 일반 날짜로 바뀝니다.</span>
+      <span class="step">③ <b>미사용 연차 일수만큼</b> 모두 표시하면 상단 <b>🖨️ 인쇄</b> 버튼이 활성화됩니다. 인쇄 후 <b>서명</b>하고 <b>스캔본</b>을 인사팀에 제출하세요.</span>
+      <button class="ok" id="howtoOk">확인</button>
+    </div>
+  </div>
 </div>
-<div class="no-print" style="position:fixed;right:8px;bottom:6px;font-size:11px;color:#9aa3ad;z-index:5">ver 3 · 방학수정/초과허용 (06-24)</div>
+<div class="no-print" style="position:fixed;right:8px;bottom:6px;font-size:11px;color:#9aa3ad;z-index:5">ver 4 · 안내강조/인쇄버튼 안내팝업 (07-01)</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -283,7 +309,10 @@ function loadEmployee(e){
   buildCalendar(); updateCounts();
   $("loginPanel").style.display="none"; $("btnLogout").style.display="";
   $("ctrl").style.display=""; $("sheet").style.display="block"; window.scrollTo(0,0);
+  $("howtoModal").classList.add("on");
 }
+$("howtoOk").addEventListener("click",()=> $("howtoModal").classList.remove("on"));
+$("howtoModal").addEventListener("click",ev=>{ if(ev.target===$("howtoModal")) $("howtoModal").classList.remove("on"); });
 $("btnLogout").addEventListener("click",()=>{
   current=null; $("loginPanel").style.display=""; $("ctrl").style.display="none"; $("sheet").style.display="none";
   $("inName").value=""; $("inBirth").value=""; $("loginErr").textContent="";
@@ -356,11 +385,17 @@ function updateCounts(){
   else { cls="warn"; msg=`⚠ 미사용 연차를 ${-diff}일 초과합니다 (그대로 인쇄 가능)`; }
   $("verify").className="verify "+cls;
   $("vMsg").textContent=msg;
-  $("btnPrint").disabled=(diff>0);
+  $("btnPrint").classList.toggle("locked", diff>0);
   render();
 }
 $("btnClear").addEventListener("click",()=>{ for(const k in sel){ if(sel[k]!=="poly") delete sel[k]; } render(); updateCounts(); });
-$("btnPrint").addEventListener("click",()=>window.print());
+$("btnPrint").addEventListener("click",()=>{
+  const need=current?unusedOf(current):0;
+  const grand=parseFloat($("grandTotal").textContent)||0;
+  const diff=Math.round((need-grand)*10)/10;
+  if(diff>0){ alert(`아직 ${diff}일이 선택되지 않았습니다.\n미사용 연차 ${need}일에 맞춰 날짜를 모두 표시한 뒤 인쇄해 주세요.`); return; }
+  window.print();
+});
 
 /* ===== 관리자: 로그인 / 엑셀 업로드 ===== */
 $("btnAdLogin").addEventListener("click", async ()=>{
