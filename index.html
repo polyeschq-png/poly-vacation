@@ -119,6 +119,11 @@
           <button class="ghost" id="btnCount">현재 등록 인원</button>
           <span class="small" id="adStatus"></span>
         </div>
+        <div class="row" style="margin-top:8px">
+          <label class="small" style="display:flex;align-items:center;gap:6px;color:#c0392b;font-weight:700;cursor:pointer">
+            <input type="checkbox" id="chkReplace"> ⚠️ 이 파일로 <u>전체 교체</u> (파일에 없는 기존 대상자는 삭제됩니다)
+          </label>
+        </div>
       </div>
     </details>
   </div>
@@ -183,7 +188,7 @@
     </div>
   </div>
 </div>
-<div class="no-print" style="position:fixed;right:8px;bottom:6px;font-size:11px;color:#9aa3ad;z-index:5">ver 4 · 안내강조/인쇄버튼 안내팝업 (07-01)</div>
+<div class="no-print" style="position:fixed;right:8px;bottom:6px;font-size:11px;color:#9aa3ad;z-index:5">ver 5 · 전체교체 업로드/테두리·인쇄여백 (07-01)</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -409,6 +414,8 @@ $("btnAdLogout").addEventListener("click", ()=> signOut(auth));
 $("btnUpload").addEventListener("click", async ()=>{
   const f=$("fileXlsx").files[0];
   if(!f){ $("adStatus").textContent="파일을 선택하세요."; return; }
+  const replace=$("chkReplace").checked;
+  if(replace && !confirm("⚠️ 전체 교체 모드입니다.\n이 파일에 없는 기존 대상자는 모두 삭제됩니다.\n계속하시겠습니까?")) return;
   $("btnUpload").disabled=true; $("adStatus").textContent="처리 중…";
   try{
     const wb=XLSX.read(await f.arrayBuffer());
@@ -424,10 +431,28 @@ $("btnUpload").addEventListener("click", async ()=>{
       poly:parsePoly(r["폴리방학"]??r["폴리 방학"]??r["POLY방학"]??"")
     })).filter(r=>r.name && r.birth);
     if(!recs.length){ $("adStatus").textContent="유효한 행이 없습니다. 양식을 확인하세요."; return; }
-    const batch=writeBatch(db);
-    for(const r of recs){ batch.set(doc(db, COLLECTION, await docIdFor(r.name,r.birth)), r); }
-    await batch.commit();
-    $("adStatus").textContent=`✓ ${recs.length}명 등록 완료`;
+    /* 각 대상자 문서 ID 미리 계산 */
+    const idPairs=[];
+    for(const r of recs){ idPairs.push([await docIdFor(r.name,r.birth), r]); }
+    const newIds=new Set(idPairs.map(p=>p[0]));
+    /* 작업 목록 구성: 전체 교체면 파일에 없는 기존 문서를 삭제 대상에 추가 */
+    const ops=[];
+    let delCount=0;
+    if(replace){
+      const snap=await getDocs(collection(db, COLLECTION));
+      snap.forEach(d=>{ if(!newIds.has(d.id)){ ops.push(["del",d.ref]); delCount++; } });
+    }
+    idPairs.forEach(([id,r])=> ops.push(["set", doc(db, COLLECTION, id), r]));
+    /* Firestore 배치 한도(500) 대응: 450개씩 나눠 커밋 */
+    for(let i=0;i<ops.length;i+=450){
+      const batch=writeBatch(db);
+      ops.slice(i,i+450).forEach(o=> o[0]==="del" ? batch.delete(o[1]) : batch.set(o[1],o[2]));
+      await batch.commit();
+    }
+    $("adStatus").textContent = replace
+      ? `✓ ${recs.length}명 등록 · ${delCount}명 삭제 (전체 교체 완료)`
+      : `✓ ${recs.length}명 등록 완료`;
+    $("chkReplace").checked=false;
   }catch(err){ $("adStatus").textContent="업로드 오류: "+(err.code||err.message); }
   finally{ $("btnUpload").disabled=false; }
 });
